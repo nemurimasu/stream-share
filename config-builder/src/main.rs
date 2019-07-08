@@ -234,13 +234,13 @@ fn generate_cloud_init() -> Result<String, YamlError> {
             match part {
                 IcecastPart::Text(text) => push_escaped_str(&mut new_str, text),
                 IcecastPart::SourcePassword => {
-                    new_str.push_str("',variables('sourcePassword'),'");
+                    new_str.push_str("',parameters('sourcePassword'),'");
                 }
                 IcecastPart::RelayPassword => {
-                    new_str.push_str("',variables('relayPassword'),'");
+                    new_str.push_str("',parameters('relayPassword'),'");
                 }
                 IcecastPart::AdminPassword => {
-                    new_str.push_str("',variables('adminPassword'),'");
+                    new_str.push_str("',parameters('adminPassword'),'");
                 }
             }
         }
