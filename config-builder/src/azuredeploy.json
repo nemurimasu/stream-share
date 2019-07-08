@@ -160,13 +160,9 @@
     }
   ],
   "outputs": {
-    "hostname": {
-      "type": "string",
-      "value": "[reference('public').dnsSettings.fqdn]"
-    },
     "streamAddress": {
       "type": "string",
-      "value": "http://[reference('public').dnsSettings.fqdn]:8000/direct"
+      "value": "http://[reference('public').ipAddress]:8000/direct"
     },
     "sourcePassword": {
       "type": "string",
