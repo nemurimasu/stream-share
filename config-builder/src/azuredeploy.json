@@ -7,22 +7,18 @@
     },
     "dnsLabelPrefix": {
       "type": "string",
-      "defaultValue": "GEN-UNIQUE",
       "metadata": {
         "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
       }
     },
     "sourcePassword": {
-      "type": "securestring",
-      "defaultValue": "GEN-PASSWORD"
+      "type": "securestring"
     },
     "relayPassword": {
-      "type": "securestring",
-      "defaultValue": "GEN-PASSWORD"
+      "type": "securestring"
     },
     "adminPassword": {
-      "type": "securestring",
-      "defaultValue": "GEN-PASSWORD"
+      "type": "securestring"
     }
   },
   "variables": {
