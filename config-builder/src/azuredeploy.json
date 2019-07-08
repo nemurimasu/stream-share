@@ -2,15 +2,6 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "adminPublicKey": {
-      "type": "secureString"
-    },
-    "dnsLabelPrefix": {
-      "type": "string",
-      "metadata": {
-        "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
-      }
-    },
     "sourcePassword": {
       "type": "securestring"
     },
@@ -120,10 +111,7 @@
       "apiVersion": "2019-02-01",
       "location": "[resourceGroup().location]",
       "properties": {
-        "publicIpAllocationMethod": "Dynamic",
-        "dnsSettings": {
-          "domainNameLabel": "[parameters('dnsLabelPrefix')]"
-        }
+        "publicIpAllocationMethod": "Dynamic"
       },
       "sku": {
         "name": "Basic"
@@ -165,17 +153,7 @@
         "osProfile": {
           "computerName": "vm",
           "adminUsername": "vmadmin",
-          "linuxConfiguration": {
-            "disablePasswordAuthentication": true,
-            "ssh": {
-              "publicKeys": [
-                {
-                  "path": "/home/vmadmin/.ssh/authorized_keys",
-                  "keyData": "[parameters('adminPublicKey')]"
-                }
-              ]
-            }
-          },
+          "adminPassword": "[parameters('adminPassword')]",
           "customData": ""
         }
       }
