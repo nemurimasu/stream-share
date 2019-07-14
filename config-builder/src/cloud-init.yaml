@@ -11,6 +11,7 @@ mounts:
 - ["ephemeral0.1", "none", "swap", "sw", "0", "0"]
 packages:
 - curl
+- gcc
 - icecast2
 write_files:
 - path: /etc/default/icecast2
@@ -74,8 +75,9 @@ write_files:
     [Install]
     WantedBy=mult-user.target
 runcmd:
-- [ "sh", "-c", "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh" ]
-- [ "sh", "-c", "mkdir stream-share && curl --proto '=https' --tlsv1.2 -sSf https://github.com/nemurimasu/stream-share/tarball/master | tar xz -C stream-share --strip-components=1"]
-- [ "cargo", "build", "--release", "--manifest-path", "stream-share/Cargo.toml", "--out-dir", "/usr/local/bin" ]
+- [ "sh", "-c", "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y" ]
+- [ "sh", "-c", "mkdir stream-share && curl --proto '=https' --tlsv1.2 -sSfL https://github.com/nemurimasu/stream-share/tarball/master | tar xz -C stream-share --strip-components=1" ]
+- [ "/root/.cargo/bin/cargo", "build", "--release", "--manifest-path", "stream-share/Cargo.toml", "-p", "ingress" ]
+- [ "install", "stream-share/target/release/ingress", "/usr/local/bin/ingress" ]
 - [ "systemctl", "daemon-reload" ]
 - [ "systemctl", "enable", "--now", "ingress" ]

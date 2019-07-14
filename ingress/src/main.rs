@@ -11,7 +11,7 @@ use tokio::net::TcpStream;
 use tokio::prelude::*;
 use tokio::reactor::Handle;
 
-const ICE_ROUTES: &[&[u8]] = &[b"GET /output", b"PUT /input", b"SOURCE "];
+const ICE_ROUTES: &[&[u8]] = &[b"GET /output", b"PUT /input", b"SOURCE ", b"GET /input"];
 const ROUTE_TIMEOUT: Duration = Duration::from_secs(2);
 const ACCEPT_BACKLOG: i32 = 1024;
 const ROUTE_BUFFER_LEN: usize = 512;
@@ -21,7 +21,7 @@ lazy_static! {
         env::var("ICE_ADDR")
             .map(Cow::Owned)
             .or_else(|e| match e {
-                env::VarError::NotPresent => Ok(Cow::Borrowed("localhost:8000")),
+                env::VarError::NotPresent => Ok(Cow::Borrowed("127.0.0.1:8000")),
                 e => Err(e),
             })
             .unwrap()
@@ -32,7 +32,7 @@ lazy_static! {
         env::var("DEFAULT_ADDR")
             .map(Cow::Owned)
             .or_else(|e| match e {
-                env::VarError::NotPresent => Ok(Cow::Borrowed("localhost:5000")),
+                env::VarError::NotPresent => Ok(Cow::Borrowed("127.0.0.1:5000")),
                 e => Err(e),
             })
             .unwrap()

@@ -184,11 +184,11 @@ fn push_escaped_str(dest: &mut String, source: &str) {
     let mut start = 0;
     for (i, &c) in source.as_bytes().iter().enumerate() {
         match c {
-            b'\'' | b'\\' => {
+            b'\'' => {
                 if start < i {
                     dest.push_str(&source[start..i])
                 }
-                dest.push('\\');
+                dest.push('\'');
                 start = i;
                 dest.reserve(source.len() - start);
             }
