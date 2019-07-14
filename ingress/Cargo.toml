@@ -1,0 +1,14 @@
+[package]
+name = "ingress"
+version = "0.1.0"
+authors = ["Nemurimasu Neiro <nemurimasu@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+bytes = "0.4"
+env_logger = "0.6"
+futures = "0.1"
+lazy_static = "1"
+log = "0.4"
+net2 = "0.2"
+tokio = "0.1"

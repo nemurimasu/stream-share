@@ -67,19 +67,6 @@
               "destinationAddressPrefix": "*",
               "destinationPortRange": "80"
             }
-          },
-          {
-            "name": "Icecast2",
-            "properties": {
-              "priority": 330,
-              "protocol": "Tcp",
-              "access": "Allow",
-              "direction": "Inbound",
-              "sourceAddressPrefix": "*",
-              "sourcePortRange": "*",
-              "destinationAddressPrefix": "*",
-              "destinationPortRange": "8000"
-            }
           }
         ]
       }
@@ -154,7 +141,7 @@
           "computerName": "vm",
           "adminUsername": "vmadmin",
           "adminPassword": "[parameters('adminPassword')]",
-          "customData": "[base64(concat('#cloud-config\ndisk_setup:\n  ephemeral0:\n    table_type: mbr\n    layout: [[100, 82]]\n    overwrite: True\nfs_setup:\n  - device: ephemeral0.1\n    filesystem: swap\nmounts:\n  - [\"ephemeral0.1\", \"none\", \"swap\", \"sw\", \"0\", \"0\"]\npackages:\n  - icecast2\nwrite_files:\n- path: /etc/default/icecast2\n  content: |\n    CONFIGFILE=\"/etc/icecast2/icecast.xml\"\n    USERID=icecast2\n    GROUPID=icecast\n    ENABLE=true\n- path: /etc/icecast2/icecast.xml\n  content: |\n    <icecast><location>Earth</location><admin>icemaster@localhost</admin><limits><clients>100</clients><sources>2</sources><queue-size>524288</queue-size><client-timeout>30</client-timeout><header-timeout>15</header-timeout><source-timeout>10</source-timeout><burst-on-connect>1</burst-on-connect><burst-size>65535</burst-size></limits><authentication><source-password>',parameters('sourcePassword'),'</source-password><relay-password>',parameters('relayPassword'),'</relay-password><admin-user>admin</admin-user><admin-password>',parameters('adminPassword'),'</admin-password></authentication><hostname>localhost</hostname><listen-socket><port>8000</port></listen-socket><http-headers><header name=\"Access-Control-Allow-Origin\" value=\"*\" /></http-headers><fileserve>1</fileserve><paths><basedir>/usr/share/icecast2</basedir><logdir>/var/log/icecast2</logdir><webroot>/usr/share/icecast2/web</webroot><adminroot>/usr/share/icecast2/admin</adminroot><alias source=\"/\" destination=\"/status.xsl\"/></paths><logging><accesslog>access.log</accesslog><errorlog>error.log</errorlog><loglevel>3</loglevel><logsize>10000</logsize></logging><security><chroot>0</chroot></security></icecast>\n'))]"
+          "customData": "[base64(concat('#cloud-config\ndisk_setup:\n  ephemeral0:\n    table_type: mbr\n    layout: [[100, 82]]\n    overwrite: True\nfs_setup:\n- device: ephemeral0.1\n  filesystem: swap\nmounts:\n- [\"ephemeral0.1\", \"none\", \"swap\", \"sw\", \"0\", \"0\"]\npackages:\n- curl\n- icecast2\nwrite_files:\n- path: /etc/default/icecast2\n  content: |\n    CONFIGFILE=\"/etc/icecast2/icecast.xml\"\n    USERID=icecast2\n    GROUPID=icecast\n    ENABLE=true\n- path: /etc/icecast2/icecast.xml\n  content: |\n    <icecast><location>Earth</location><admin>icemaster@localhost</admin><limits><clients>100</clients><sources>2</sources><queue-size>524288</queue-size><client-timeout>30</client-timeout><header-timeout>15</header-timeout><source-timeout>10</source-timeout><burst-on-connect>1</burst-on-connect><burst-size>65535</burst-size></limits><authentication><source-password>',parameters('sourcePassword'),'</source-password><relay-password>',parameters('relayPassword'),'</relay-password><admin-user>admin</admin-user><admin-password>',parameters('adminPassword'),'</admin-password></authentication><hostname>localhost</hostname><listen-socket><port>8000</port></listen-socket><http-headers><header name=\"Access-Control-Allow-Origin\" value=\"*\" /></http-headers><fileserve>1</fileserve><paths><basedir>/usr/share/icecast2</basedir><logdir>/var/log/icecast2</logdir><webroot>/usr/share/icecast2/web</webroot><adminroot>/usr/share/icecast2/admin</adminroot><alias source=\"/\" destination=\"/status.xsl\"/></paths><logging><accesslog>access.log</accesslog><errorlog>error.log</errorlog><loglevel>3</loglevel><logsize>10000</logsize></logging><security><chroot>0</chroot></security></icecast>\n- path: /etc/systemd/system/ingress.service\n  content: |\n    [Unit]\n    Description=Stream Share Ingress\n    [Service]\n    ExecStart=/usr/local/bin/ingress\n    [Install]\n    WantedBy=mult-user.target\nruncmd:\n- [ \"sh\", \"-c\", \"curl --proto \\'=https\\' --tlsv1.2 -sSf https://sh.rustup.rs | sh\" ]\n- [ \"sh\", \"-c\", \"mkdir stream-share && curl --proto \\'=https\\' --tlsv1.2 -sSf https://github.com/nemurimasu/stream-share/tarball/master | tar xz -C stream-share --strip-components=1\"]\n- [ \"cargo\", \"build\", \"--release\", \"--manifest-path\", \"stream-share/Cargo.toml\", \"--out-dir\", \"/usr/local/bin\" ]\n- [ \"systemctl\", \"daemon-reload\" ]\n- [ \"systemctl\", \"enable\", \"--now\", \"ingress\" ]'))]"
         }
       }
     }
@@ -162,7 +149,7 @@
   "outputs": {
     "streamAddress": {
       "type": "string",
-      "value": "http://[reference('public').ipAddress]:8000/direct"
+      "value": "http://[reference('public').ipAddress]/input"
     },
     "sourcePassword": {
       "type": "string",

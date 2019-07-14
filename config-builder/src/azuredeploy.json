@@ -67,19 +67,6 @@
               "destinationAddressPrefix": "*",
               "destinationPortRange": "80"
             }
-          },
-          {
-            "name": "Icecast2",
-            "properties": {
-              "priority": 330,
-              "protocol": "Tcp",
-              "access": "Allow",
-              "direction": "Inbound",
-              "sourceAddressPrefix": "*",
-              "sourcePortRange": "*",
-              "destinationAddressPrefix": "*",
-              "destinationPortRange": "8000"
-            }
           }
         ]
       }
@@ -162,7 +149,7 @@
   "outputs": {
     "streamAddress": {
       "type": "string",
-      "value": "http://[reference('public').ipAddress]:8000/direct"
+      "value": "http://[reference('public').ipAddress]/input"
     },
     "sourcePassword": {
       "type": "string",

@@ -5,12 +5,13 @@ disk_setup:
     layout: [[100, 82]]
     overwrite: True
 fs_setup:
-  - device: ephemeral0.1
-    filesystem: swap
+- device: ephemeral0.1
+  filesystem: swap
 mounts:
-  - ["ephemeral0.1", "none", "swap", "sw", "0", "0"]
+- ["ephemeral0.1", "none", "swap", "sw", "0", "0"]
 packages:
-  - icecast2
+- curl
+- icecast2
 write_files:
 - path: /etc/default/icecast2
   content: |
@@ -64,3 +65,17 @@ write_files:
         <chroot>0</chroot>
       </security>
     </icecast>
+- path: /etc/systemd/system/ingress.service
+  content: |
+    [Unit]
+    Description=Stream Share Ingress
+    [Service]
+    ExecStart=/usr/local/bin/ingress
+    [Install]
+    WantedBy=mult-user.target
+runcmd:
+- [ "sh", "-c", "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh" ]
+- [ "sh", "-c", "mkdir stream-share && curl --proto '=https' --tlsv1.2 -sSf https://github.com/nemurimasu/stream-share/tarball/master | tar xz -C stream-share --strip-components=1"]
+- [ "cargo", "build", "--release", "--manifest-path", "stream-share/Cargo.toml", "--out-dir", "/usr/local/bin" ]
+- [ "systemctl", "daemon-reload" ]
+- [ "systemctl", "enable", "--now", "ingress" ]
